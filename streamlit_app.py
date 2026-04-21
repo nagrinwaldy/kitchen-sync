@@ -1,49 +1,74 @@
 import streamlit as st
 
-# Force High-Contrast Neutral (Fixes Dark/Light adaptive issue)
+# Force High-Contrast Adaptive Look
 st.set_page_config(page_title="KitchenSync PoC", page_icon="🍳", layout="wide")
 
-# --- PREMIUM eMEALS-STYLE CSS ---
+# --- DYNAMIC ADAPTIVE CSS ---
 st.markdown("""
     <style>
-    /* Default (Light Mode) Variables */
+    /* 1. Default (Light Mode) Variables */
     :root {
-        --bg-color: #FFFFFF;
-        --card-bg: #FDFBF7; /* Warm Parchment */
-        --text-main: #2D5A27; /* Deep Forest Green */
+        --bg-color: #FDFBF7; /* Warm Parchment */
+        --card-bg: #FFFFFF;
+        --text-main: #2D5A27; /* Forest Green */
         --text-sub: #444444;
+        --accent-charity: #D4AF37; /* Gold */
         --border-color: #E0D7C6;
     }
 
-    /* Dark Mode Variables (Automatic Toggle) */
+    /* 2. Dark Mode Variables (Automatic Toggle) */
     @media (prefers-color-scheme: dark) {
         :root {
-            --bg-color: #0F1116;
+            --bg-color: #0F1116; /* Deep Slate */
             --card-bg: #1A1D23;
-            --text-main: #81C784; /* Mint Green for readability */
+            --text-main: #81C784; /* Mint Green readability */
             --text-sub: #BBBBBB;
+            --accent-charity: #FFD54F; /* Brighter Gold readability */
             --border-color: #333333;
         }
     }
 
     .stApp { background-color: var(--bg-color) !important; }
     
-    /* Logo Font: Professional but warm */
-    .brand-logo {
-        color: var(--text-main) !important;
+    /* Dynamic Typography using var() */
+    h1, h2, h3, h4, p, span, label, .stMarkdown {
+        color: var(--text-sub) !important;
+    }
+
+    /* Master Brand Header (Text-based placeholder until URL provided) */
+    .brand-logo-text {
         font-family: 'Arial Black', sans-serif;
         font-size: 55px;
-        letter-spacing: -3px;
+        color: var(--text-main) !important;
         margin-bottom: 0px;
     }
-    .brand-subtitle {
-        color: #D4AF37 !important; /* Gold accent for charity */
+
+    /* Adaptive Verified Badge */
+    .verified-badge {
+        color: var(--accent-charity) !important;
+        background-color: var(--card-bg);
+        padding: 5px 12px;
+        border-radius: 50px;
+        border: 2px solid var(--accent-charity);
         font-weight: 700;
+        font-size: 14px;
+        display: inline-block;
         margin-top: -10px;
         margin-bottom: 40px;
     }
 
-    /* The 'eMeals' Style Meal Card */
+    /* Impact Bar Fix (Now dynamic) */
+    .impact-bar-adaptive {
+        background-color: var(--card-bg);
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 5px solid var(--accent-charity);
+        color: var(--text-sub) !important;
+        margin-bottom: 30px;
+        font-size: 14px;
+    }
+    
+    /* eMeals Legit Meal Card */
     .meal-card {
         background-color: var(--card-bg);
         padding: 30px;
@@ -51,29 +76,10 @@ st.markdown("""
         border: 1px solid var(--border-color);
         box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         transition: transform 0.2s ease;
-        text-align: center;
         min-height: 250px;
         margin-bottom: 15px;
     }
     
-    .meal-card:hover { transform: translateY(-3px); }
-
-    .meal-title {
-        color: var(--text-main);
-        font-weight: 800;
-        font-size: 24px;
-        margin-top: 15px;
-    }
-    
-    .meal-meta {
-        color: #D4AF37; /* Gold for wellness status */
-        font-weight: 600;
-        font-size: 13px;
-        text-transform: uppercase;
-        margin-top: 5px;
-    }
-
-    /* Clean Buttons */
     .stButton>button {
         background-color: var(--text-main) !important;
         color: var(--bg-color) !important;
@@ -83,79 +89,55 @@ st.markdown("""
         font-weight: 700 !important;
         width: 100%;
     }
-
-    /* The Impact Tracker (Now integrated on the main page) */
-    .impact-bar {
-        background-color: var(--card-bg);
-        padding: 15px;
-        border-radius: 10px;
-        border-left: 5px solid #D4AF37;
-        color: var(--text-sub);
-        margin-bottom: 30px;
-        font-size: 14px;
-    }
     </style>
 """, unsafe_allow_html=True)
 
-# --- THE PAGE CONTENT (Isolation Strategy) ---
+# --- THE PAGE CONTENT ---
 
-# We use columns to put the logo and the impact tracker side-by-side
-logo_col, impact_col = st.columns([1, 1])
+header_col, impact_col = st.columns([1, 1])
 
-with logo_col:
-    # We will swap this text for the actual logo image URL once you have it uploaded
-    st.markdown('<p class="brand-logo">KitchenSync</p>', unsafe_allow_html=True)
-    st.markdown('<p class="brand-subtitle">Wellness & Logistics | Sheboygan County</p>', unsafe_allow_html=True)
+with header_col:
+    # Logo Placeholder: Provide a public URL to make this the actual image.
+    st.markdown('<p class="brand-logo-text">KitchenSync PoC</p>', unsafe_allow_html=True)
+    st.markdown('<div class="verified-badge">✅ Social Enterprise | Sheboygan County</div>', unsafe_allow_html=True)
 
 with impact_col:
-    # This bar replaces the washed-out sidebar
-    st.markdown('<div class="impact-bar">❤️ <b>Verified Community Impact:</b> Your clicks today supported 14 meals at the Sheboygan County Food Bank.</div>', unsafe_allow_html=True)
+    # Adaptive Impact Bar
+    st.markdown('<div class="impact-bar-adaptive">❤️ Your use of this app funded **14 meals** at the Sheboygan County Food Bank today.</div>', unsafe_allow_html=True)
 
 st.write("---")
 
-# --- MEAL DISCOVERY (The Pick-List) ---
+# --- MEAL DISCOVERY SECTION ---
 st.header("Weekly Meal Curations")
-st.write("AI-optimized meal flows based on peak wellness, budget logistics, and Sheboygan County availability.")
+st.write("AI-optimized meal flows based on peak wellness, budget logistics, and local availability.")
 
 col1, col2, col3 = st.columns(3)
 
-# Mock Data (Soon to be AI-driven)
-meals = [
+# Mock Curations
+curations = [
     {
-        "title": "Zesty Lemon Chicken", 
-        "tag": "High Protein | Wellness Boost", 
-        "id": "zl_chicken"
+        "title": "Quick & Healthy (5 Days)", 
+        "id": "qh_week1"
     },
     {
-        "title": "Quinoa & Black Bean Power Bowls", 
-        "tag": "Max Fiber | Budget Win", 
-        "id": "qbb_bowls"
+        "title": "Budget Logistics (3 Days)", 
+        "id": "bl_week1"
     },
     {
-        "title": "Pan-Seared Salmon & Asparagus", 
-        "tag": "Omega-3 Focus | Seasonal Pick", 
-        "id": "psa_salmon"
+        "title": "Wellness Upgrade (5 Days)", 
+        "id": "wu_week1"
     }
 ]
 
 for i, col in enumerate([col1, col2, col3]):
     with col:
-        # eMeals-style card injection
         st.markdown(f"""
             <div class="meal-card">
-                <div style="font-size: 50px;">🍳</div> # Placeholder for image/emoji
-                <div class="meal-title">{meals[i]['title']}</div>
-                <div class="meal-meta">{meals[i]['tag']}</div>
+                <div style="font-size: 50px; text-align:center;">🍳</div>
+                <h3 style="color: var(--text-main) !important; text-align:center;">{curations[i]['title']}</h3>
+                <p style="font-size: 14px; text-align:center;">Includes: Lemon Chicken, Power Bowl, Chili (local beef)...</p>
             </div>
         """, unsafe_allow_html=True)
         # Using a native button underneath for functionality
-        if st.button("Select Option", key=f"select_{meals[i]['id']}"):
-            st.session_state.choice = meals[i]['title']
-
-# --- RESULT AREA ---
-if 'choice' in st.session_state:
-    st.write("---")
-    st.success(f"**Excellent Choice.** Syncing ingredients for **{st.session_state.choice}**...")
-    
-    # Placeholders for the Multi-Item API Link
-    st.link_button("🛒 One-Click to Walmart Cart", "https://www.walmart.com")
+        if st.button("Select Plan", key=f"select_{curations[i]['id']}"):
+            st.session_state.current_choice = curations[i]['title']
