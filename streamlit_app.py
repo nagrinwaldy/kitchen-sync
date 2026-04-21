@@ -1,110 +1,161 @@
 import streamlit as st
 
-# Page Branding & Neutral Theme (Works for Light & Dark)
+# Force High-Contrast Neutral (Fixes Dark/Light adaptive issue)
 st.set_page_config(page_title="KitchenSync PoC", page_icon="🍳", layout="wide")
 
-# Bulletproof Neutral CSS
+# --- PREMIUM eMEALS-STYLE CSS ---
 st.markdown("""
     <style>
-    .stApp { background-color: #0F1116 !important; } /* Deep Slate */
-    h1, h2, h3, h4, p, span, label { color: #FFFFFF !important; }
-    .stButton>button { 
-        background-color: #2D5A27 !important; 
-        color: white !important; 
-        border-radius: 8px;
-        border: none;
-        padding: 10px 20px;
+    /* Default (Light Mode) Variables */
+    :root {
+        --bg-color: #FFFFFF;
+        --card-bg: #FDFBF7; /* Warm Parchment */
+        --text-main: #2D5A27; /* Deep Forest Green */
+        --text-sub: #444444;
+        --border-color: #E0D7C6;
     }
-    .option-card {
-        background-color: #1A1D23;
-        padding: 25px;
-        border-radius: 15px;
-        border: 1px solid #30363D;
-        margin-bottom: 20px;
+
+    /* Dark Mode Variables (Automatic Toggle) */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-color: #0F1116;
+            --card-bg: #1A1D23;
+            --text-main: #81C784; /* Mint Green for readability */
+            --text-sub: #BBBBBB;
+            --border-color: #333333;
+        }
     }
-    .metric-text { color: #81C784 !important; font-weight: bold; }
+
+    .stApp { background-color: var(--bg-color) !important; }
+    
+    /* Logo Font: Professional but warm */
+    .brand-logo {
+        color: var(--text-main) !important;
+        font-family: 'Arial Black', sans-serif;
+        font-size: 55px;
+        letter-spacing: -3px;
+        margin-bottom: 0px;
+    }
+    .brand-subtitle {
+        color: #D4AF37 !important; /* Gold accent for charity */
+        font-weight: 700;
+        margin-top: -10px;
+        margin-bottom: 40px;
+    }
+
+    /* The 'eMeals' Style Meal Card */
+    .meal-card {
+        background-color: var(--card-bg);
+        padding: 30px;
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease;
+        text-align: center;
+        min-height: 250px;
+        margin-bottom: 15px;
+    }
+    
+    .meal-card:hover { transform: translateY(-3px); }
+
+    .meal-title {
+        color: var(--text-main);
+        font-weight: 800;
+        font-size: 24px;
+        margin-top: 15px;
+    }
+    
+    .meal-meta {
+        color: #D4AF37; /* Gold for wellness status */
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        margin-top: 5px;
+    }
+
+    /* Clean Buttons */
+    .stButton>button {
+        background-color: var(--text-main) !important;
+        color: var(--bg-color) !important;
+        border-radius: 50px !important;
+        border: none !important;
+        padding: 12px 30px !important;
+        font-weight: 700 !important;
+        width: 100%;
+    }
+
+    /* The Impact Tracker (Now integrated on the main page) */
+    .impact-bar {
+        background-color: var(--card-bg);
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 5px solid #D4AF37;
+        color: var(--text-sub);
+        margin-bottom: 30px;
+        font-size: 14px;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# --- SIDEBAR: The Foundational Context ---
-with st.sidebar:
-    st.markdown('<h1 style="color:#2D5A27; font-weight:800;">KitchenSync</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#D4AF37; margin-top:-10px;">Wellness & Logistics | Sheboygan</p>', unsafe_allow_html=True)
+# --- THE PAGE CONTENT (Isolation Strategy) ---
+
+# We use columns to put the logo and the impact tracker side-by-side
+logo_col, impact_col = st.columns([1, 1])
+
+with logo_col:
+    # We will swap this text for the actual logo image URL once you have it uploaded
+    st.markdown('<p class="brand-logo">KitchenSync</p>', unsafe_allow_html=True)
+    st.markdown('<p class="brand-subtitle">Wellness & Logistics | Sheboygan County</p>', unsafe_allow_html=True)
+
+with impact_col:
+    # This bar replaces the washed-out sidebar
+    st.markdown('<div class="impact-bar">❤️ <b>Verified Community Impact:</b> Your clicks today supported 14 meals at the Sheboygan County Food Bank.</div>', unsafe_allow_html=True)
+
+st.write("---")
+
+# --- MEAL DISCOVERY (The Pick-List) ---
+st.header("Weekly Meal Curations")
+st.write("AI-optimized meal flows based on peak wellness, budget logistics, and Sheboygan County availability.")
+
+col1, col2, col3 = st.columns(3)
+
+# Mock Data (Soon to be AI-driven)
+meals = [
+    {
+        "title": "Zesty Lemon Chicken", 
+        "tag": "High Protein | Wellness Boost", 
+        "id": "zl_chicken"
+    },
+    {
+        "title": "Quinoa & Black Bean Power Bowls", 
+        "tag": "Max Fiber | Budget Win", 
+        "id": "qbb_bowls"
+    },
+    {
+        "title": "Pan-Seared Salmon & Asparagus", 
+        "tag": "Omega-3 Focus | Seasonal Pick", 
+        "id": "psa_salmon"
+    }
+]
+
+for i, col in enumerate([col1, col2, col3]):
+    with col:
+        # eMeals-style card injection
+        st.markdown(f"""
+            <div class="meal-card">
+                <div style="font-size: 50px;">🍳</div> # Placeholder for image/emoji
+                <div class="meal-title">{meals[i]['title']}</div>
+                <div class="meal-meta">{meals[i]['tag']}</div>
+            </div>
+        """, unsafe_allow_html=True)
+        # Using a native button underneath for functionality
+        if st.button("Select Option", key=f"select_{meals[i]['id']}"):
+            st.session_state.choice = meals[i]['title']
+
+# --- RESULT AREA ---
+if 'choice' in st.session_state:
     st.write("---")
-
-    st.markdown("## ⚙️ Foundational Profile")
-    st.caption("Context: Wife's Maco Goals (1,575kcal, 135g Protein, 140g Carbs, 55g Fat), Sheboygan Seasonality.")
+    st.success(f"**Excellent Choice.** Syncing ingredients for **{st.session_state.choice}**...")
     
-    #🚀 Action
-    if st.button("Generate My 5-Day Blueprint", use_container_width=True):
-        st.session_state.data_loaded = True
-        st.balloons()
-        
-    st.write("---")
-    st.markdown("### ❤️ Local Impact")
-    st.metric("Sheboygan Food Bank Support", "$1,240")
-
-# --- MAIN SECTION ---
-st.header("Home Culinary Operating System")
-
-if 'data_loaded' in st.session_state:
-    st.subheader("Your 5-Day Blueprint (Refinement)")
-    
-    # TAB VIEW: Layout & Refinement
-    tab1, tab2 = st.tabs(["Overview & Refinement", "Recipe Cards"])
-
-    # 1. THE REFINEMENT FLOW
-    with tab1:
-        st.write("This is your high-level view. Need a change? Hit the Swap button.")
-        
-        d1, d2, d3, d4, d5 = st.columns(5)
-        days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-        
-        # MOCK DATA from your source (We will automate this generation with Gemini)
-        current_meals = [
-            {"dinner": "Zesty Beef & Cabbage "},
-            {"dinner": "Smoky BBQ Chicken Bowls "},
-            {"dinner": "Savory Beef Tips "},
-            {"dinner": "Lemon-Garlic Chicken"},
-            {"dinner": "Sovereign Steak Hash "}
-        ]
-
-        for i, col in enumerate([d1, d2, d3, d4, d5]):
-            with col:
-                st.markdown(f"""
-                    <div class="option-card" style="min-height:220px;">
-                        <h4>{days[i]} Dinner</h4>
-                        <p style="font-size:14px; color:#AAA;">{current_meals[i]['dinner']}</p>
-                    </div>
-                """, unsafe_allow_html=True)
-                
-                # The 'Swap' Loop
-                if st.button(f"🔄 Swap {days[i]}", key=f"swap_{days[i]}"):
-                    st.toast(f"Generating alternative for {days[i]} Dinner ...")
-
-        # 🚀 Final Execution
-        st.write("---")
-        st.subheader("Finalize & Cart (Sheboygan Logistics Mapping)")
-        st.write("Consolidating 5 days, mapping to Master List & Red Potatoes...")
-        
-        if st.button("🛒 Generate Unified Walmart Add to Cart Link", use_container_width=True):
-            st.success("Mapping 15 Items via Affiliate Bridge... [MOCK DONE]")
-
-    # 2. THE RECIPE CARDS
-    with tab2:
-        st.subheader("Chef's Recipe Cards")
-        
-        # Displaying selected cards from your data
-        with st.expander("1. The 'Golden Bird' (Sunday Dinner)"):
-            st.markdown("""
-            **Chef's Secret :** 'Dry-brining' for paper-crisp skin.
-            *Ingredients :* 2 Chickens, Avocado Oil, Lemon, Herbs.
-            *Pop:* Spatchcocking ensures skin 'shatters'.
-            """)
-
-        with st.expander("2. Zesty 'Crack' Cabbage & Beef (Monday Dinner)"):
-            st.markdown("""
-            **Chef's Secret :** Flash-searing cabbage for zero mush.
-            *Ingredients :* 1.5lbs Sirloin, Cabbage, Onion, Limes, Garlic.
-            *Method:* Return beef, kill heat, squeeze limes. Pop cuts the fat perfectly .
-            """)
+    # Placeholders for the Multi-Item API Link
+    st.link_button("🛒 One-Click to Walmart Cart", "https://www.walmart.com")
