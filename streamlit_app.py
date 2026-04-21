@@ -1,143 +1,129 @@
 import streamlit as st
 
-# Force High-Contrast Adaptive Look
-st.set_page_config(page_title="KitchenSync PoC", page_icon="🍳", layout="wide")
+# Force High-Contrast UI
+st.set_page_config(page_title="Hearth | Logistics", page_icon="🔥", layout="wide")
 
-# --- DYNAMIC ADAPTIVE CSS ---
+# --- THE "HEARTH" PROFESSIONAL CSS ---
 st.markdown("""
     <style>
-    /* 1. Default (Light Mode) Variables */
-    :root {
-        --bg-color: #FDFBF7; /* Warm Parchment */
-        --card-bg: #FFFFFF;
-        --text-main: #2D5A27; /* Forest Green */
-        --text-sub: #444444;
-        --accent-charity: #D4AF37; /* Gold */
-        --border-color: #E0D7C6;
-    }
-
-    /* 2. Dark Mode Variables (Automatic Toggle) */
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --bg-color: #0F1116; /* Deep Slate */
-            --card-bg: #1A1D23;
-            --text-main: #81C784; /* Mint Green readability */
-            --text-sub: #BBBBBB;
-            --accent-charity: #FFD54F; /* Brighter Gold readability */
-            --border-color: #333333;
-        }
-    }
-
-    .stApp { background-color: var(--bg-color) !important; }
+    /* Force Dark Slate Theme - No more washed out text */
+    .stApp { background-color: #111418 !important; }
     
-    /* Dynamic Typography using var() */
-    h1, h2, h3, h4, p, span, label, .stMarkdown {
-        color: var(--text-sub) !important;
+    /* Premium Card Design */
+    .recipe-card {
+        background-color: #1A1D23;
+        padding: 25px;
+        border-radius: 16px;
+        border: 1px solid #2D333B;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
-
-    /* Master Brand Header (Text-based placeholder until URL provided) */
-    .brand-logo-text {
-        font-family: 'Arial Black', sans-serif;
-        font-size: 55px;
-        color: var(--text-main) !important;
-        margin-bottom: 0px;
-    }
-
-    /* Adaptive Verified Badge */
-    .verified-badge {
-        color: var(--accent-charity) !important;
-        background-color: var(--card-bg);
-        padding: 5px 12px;
-        border-radius: 50px;
-        border: 2px solid var(--accent-charity);
-        font-weight: 700;
+    
+    .chef-secret {
+        background-color: #2D5A27;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
         font-size: 14px;
-        display: inline-block;
-        margin-top: -10px;
-        margin-bottom: 40px;
+        font-style: italic;
+        margin: 10px 0;
     }
 
-    /* Impact Bar Fix (Now dynamic) */
-    .impact-bar-adaptive {
-        background-color: var(--card-bg);
+    .flavor-pop {
+        color: #D4AF37;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    h1, h2, h3, p, li { color: #FFFFFF !important; font-family: 'Inter', sans-serif; }
+    
+    .metric-box {
+        text-align: center;
         padding: 15px;
-        border-radius: 10px;
-        border-left: 5px solid var(--accent-charity);
-        color: var(--text-sub) !important;
-        margin-bottom: 30px;
-        font-size: 14px;
-    }
-    
-    /* eMeals Legit Meal Card */
-    .meal-card {
-        background-color: var(--card-bg);
-        padding: 30px;
-        border-radius: 20px;
-        border: 1px solid var(--border-color);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        transition: transform 0.2s ease;
-        min-height: 250px;
-        margin-bottom: 15px;
-    }
-    
-    .stButton>button {
-        background-color: var(--text-main) !important;
-        color: var(--bg-color) !important;
-        border-radius: 50px !important;
-        border: none !important;
-        padding: 12px 30px !important;
-        font-weight: 700 !important;
-        width: 100%;
+        background: #1A1D23;
+        border-radius: 12px;
+        border-top: 4px solid #D4AF37;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# --- THE PAGE CONTENT ---
+# --- HEADER SECTION ---
+col1, col2 = st.columns([2, 1])
+with col1:
+    st.markdown('<h1 style="font-size: 42px; margin-bottom:0;">🔥 Hearth</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#81C784 !important; font-weight:600;">Wellness Logistics | Sheboygan County</p>', unsafe_allow_html=True)
 
-header_col, impact_col = st.columns([1, 1])
-
-with header_col:
-    # Logo Placeholder: Provide a public URL to make this the actual image.
-    st.markdown('<p class="brand-logo-text">KitchenSync PoC</p>', unsafe_allow_html=True)
-    st.markdown('<div class="verified-badge">✅ Social Enterprise | Sheboygan County</div>', unsafe_allow_html=True)
-
-with impact_col:
-    # Adaptive Impact Bar
-    st.markdown('<div class="impact-bar-adaptive">❤️ Your use of this app funded **14 meals** at the Sheboygan County Food Bank today.</div>', unsafe_allow_html=True)
+with col2:
+    st.markdown("""
+        <div class="metric-box">
+            <span style="color:#D4AF37; font-weight:bold;">COMMUNITY IMPACT</span><br>
+            <span style="font-size:24px; font-weight:800;">$1,240 Donated</span>
+        </div>
+    """, unsafe_allow_html=True)
 
 st.write("---")
 
-# --- MEAL DISCOVERY SECTION ---
-st.header("Weekly Meal Curations")
-st.write("AI-optimized meal flows based on peak wellness, budget logistics, and local availability.")
+# --- THE WORKFLOW: REFINEMENT ---
+tab1, tab2, tab3 = st.tabs(["📅 Weekly Blueprint", "👨‍🍳 Chef's Recipe Cards", "🛒 Automated Cart"])
 
-col1, col2, col3 = st.columns(3)
+with tab1:
+    st.subheader("Your 5-Day Homestead Harvest [cite: 2, 70]")
+    
+    # Mocking the interaction: In the real app, Gemini would fill these
+    cols = st.columns(5)
+    days = ["SUN", "MON", "TUE", "WED", "THU"]
+    meals = ["Herb-Roasted Chicken", "Zesty Beef & Cabbage", "Smoky BBQ Chicken", "Savory Beef Tips", "Lemon-Garlic Chicken"] [cite: 4]
+    
+    for i, col in enumerate(cols):
+        with col:
+            st.markdown(f"""
+                <div style="background:#1A1D23; padding:15px; border-radius:10px; border:1px solid #2D333B;">
+                    <p style="color:#D4AF37 !important; font-weight:bold; margin-bottom:5px;">{days[i]}</p>
+                    <p style="font-size:14px; min-height:40px;">{meals[i]}</p>
+                </div>
+            """, unsafe_allow_html=True)
+            if st.button(f"Swap", key=f"swp_{i}"):
+                st.toast("Gemini is finding an alternative...")
 
-# Mock Curations
-curations = [
-    {
-        "title": "Quick & Healthy (5 Days)", 
-        "id": "qh_week1"
-    },
-    {
-        "title": "Budget Logistics (3 Days)", 
-        "id": "bl_week1"
-    },
-    {
-        "title": "Wellness Upgrade (5 Days)", 
-        "id": "wu_week1"
-    }
-]
-
-for i, col in enumerate([col1, col2, col3]):
-    with col:
+with tab2:
+    st.subheader("The 'Flavor Pop' Collection [cite: 9]")
+    
+    # Recipe 1: Roasted Chicken
+    with st.container():
         st.markdown(f"""
-            <div class="meal-card">
-                <div style="font-size: 50px; text-align:center;">🍳</div>
-                <h3 style="color: var(--text-main) !important; text-align:center;">{curations[i]['title']}</h3>
-                <p style="font-size: 14px; text-align:center;">Includes: Lemon Chicken, Power Bowl, Chili (local beef)...</p>
+            <div class="recipe-card">
+                <span class="flavor-pop">The Golden Bird [cite: 10]</span>
+                <h3 style="margin-top:5px;">Herb-Roasted Chicken</h3>
+                <div class="chef-secret">"Dry-brining" and high-heat finishing for paper-crisp skin.</div>
+                <p><b>Technique:</b> Spatchcocking ensures the skin "shatters" while meat stays juicy[cite: 14].</p>
+                <p style="font-size:13px; color:#AAA !important;">Ingredients: 2 Whole Chickens, Avocado Oil, Rosemary, Thyme, Lemon[cite: 12].</p>
             </div>
         """, unsafe_allow_html=True)
-        # Using a native button underneath for functionality
-        if st.button("Select Plan", key=f"select_{curations[i]['id']}"):
-            st.session_state.current_choice = curations[i]['title']
+
+    # Recipe 2: Cabbage & Beef
+    with st.container():
+        st.markdown(f"""
+            <div class="recipe-card">
+                <span class="flavor-pop">The Zesty Pop </span>
+                <h3 style="margin-top:5px;">"Crack" Cabbage & Beef Skillet</h3>
+                <div class="chef-secret">Flash-searing cabbage for a nutty, caramelized crunch—zero mush[cite: 16].</div>
+                <p><b>Technique:</b> Kill heat and squeeze fresh lime at the very end to cut the beef fat perfectly.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+with tab3:
+    st.subheader("Logistics & Cart Mapping")
+    st.info("Mapping to your Sheboygan Walmart: 15 items identified[cite: 38].")
+    if st.button("🚀 Sync Complete Plan to Walmart Cart"):
+        st.success("Successfully mapped all ingredients to your cart!")
+
+# --- WIFE'S MACRO TRACKER (Visual Footer) ---
+st.write("---")
+st.markdown("### 📊 Foundation Targets [cite: 63]")
+c1, c2, c3, c4 = st.columns(4)
+c1.metric("Calories", "1,575", "[cite: 65]")
+c2.metric("Protein", "135g", "[cite: 66]")
+c3.metric("Carbs", "140g", "[cite: 67]")
+c4.metric("Fats", "55g", "[cite: 68]")
