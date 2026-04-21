@@ -3,82 +3,71 @@ import streamlit as st
 # Page Branding
 st.set_page_config(page_title="KitchenSync | Sheboygan", page_icon="🍳", layout="wide")
 
-# Custom Styles for the PoC
+# --- DYNAMIC ADAPTIVE CSS ---
 st.markdown("""
     <style>
-    .stApp { background-color: #FDFBF7; }
-    .main-header { color: #2D5A27; font-size: 40px; font-weight: 800; margin-bottom: 0px; }
-    .sub-text { color: #666; font-size: 18px; margin-bottom: 30px; }
+    /* Default (Light Mode) Variables */
+    :root {
+        --bg-color: #FDFBF7;
+        --card-bg: #FFFFFF;
+        --text-main: #2D5A27;
+        --text-sub: #666666;
+        --border-color: #EAEAEA;
+    }
+
+    /* Dark Mode Variables */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1E1E1E;
+            --text-main: #81C784; /* A lighter green for dark backgrounds */
+            --text-sub: #BBBBBB;
+            --border-color: #333333;
+        }
+    }
+
+    .stApp { background-color: var(--bg-color); }
+    
+    .main-header { 
+        color: var(--text-main); 
+        font-size: 42px; 
+        font-weight: 800; 
+    }
+    
+    .sub-text { 
+        color: var(--text-sub); 
+        font-size: 18px; 
+    }
+
     .card {
-        background-color: white;
+        background-color: var(--card-bg);
         padding: 20px;
         border-radius: 12px;
-        border: 1px solid #EEE;
+        border: 1px solid var(--border-color);
+        color: var(--text-sub);
         margin-bottom: 10px;
     }
-    .wellness-tag { color: #2D5A27; font-weight: bold; background: #E8F5E9; padding: 4px 8px; border-radius: 5px; font-size: 12px; }
+    
+    b { color: var(--text-main); } /* Ensures bold text stays visible */
     </style>
 """, unsafe_allow_html=True)
 
-# --- SIDEBAR: Profile & Settings ---
-with st.sidebar:
-    st.image("https://www.gstatic.com/lamda/images/gemini_sparkle_v002.svg", width=50) # Placeholder Logo
-    st.markdown("## KitchenSync Controls")
-    persona = st.selectbox("View Profile", ["The Hearth (Wellness/Family)", "The Blueprint (Efficiency/Pro)"])
-    st.slider("Target Budget ($/week)", 50, 500, 150)
-    st.checkbox("Prioritize Organic (Walmart)", value=True)
-    
-    st.write("---")
-    st.markdown("### ❤️ Local Impact")
-    st.info("**Beneficiary:** Sheboygan County Food Bank\n\n**Total Generated:** $1,240.00")
-
-# --- MAIN SECTION: The Dashboard ---
+# --- RE-APPLYING THE LAYOUT ---
 st.markdown('<p class="main-header">🍳 KitchenSync</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub-text">Feeding Sheboygan County families with precision and heart.</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-text">Intelligent meal planning for the Sheboygan community.</p>', unsafe_allow_html=True)
 
-# Horizontal Metrics
-m1, m2, m3, m4 = st.columns(4)
-m1.metric("Weekly Wellness", "92%", "↑ 4%")
-m2.metric("Projected Savings", "$18.50", "-12%")
-m3.metric("Time Saved", "42 min", "High")
-m4.metric("Charity Credit", "$4.20", "Active")
+# Side-by-side metrics
+m1, m2, m3 = st.columns(3)
+m1.metric("Wellness Score", "94%")
+m2.metric("Savings", "$12.40")
+m3.metric("Charity Earned", "$3.10")
 
 st.write("---")
 
-# --- TWO COLUMN LAYOUT: Planning & Preview ---
-left_col, right_col = st.columns([1, 1.2])
-
-with left_col:
-    st.subheader("📝 Meal Plan Entry")
-    meal_input = st.text_area("What are we eating this week?", 
-                              placeholder="Monday: Taco Night with extra veggies\nTuesday: Sheet pan salmon and asparagus...",
-                              height=150)
-    
-    if st.button("🚀 Sync Everything to Walmart", use_container_width=True):
-        st.toast("Optimizing for Wellness & Price...")
-        st.balloons()
-
-with right_col:
-    st.subheader("🛒 Cart Preview (Live Logic)")
-    
-    # Mock Item 1
-    with st.container():
-        st.markdown("""
-        <div class="card">
-            <span class="wellness-tag">WELLNESS UPGRADE</span>
-            <p><b>Great Value Organic Black Beans</b><br>
-            <small>Swapped from regular to reduce sodium | Saved: $0.15</small></p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    # Mock Item 2
-    with st.container():
-        st.markdown("""
-        <div class="card">
-            <span class="wellness-tag">TIME SAVER</span>
-            <p><b>Pre-Washed Organic Kale Medley (12oz)</b><br>
-            <small>Optimized for 15-min prep time | Price: $3.98</small></p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.button("Checkout at Walmart (Plymouth, WI)")
+# Demo Card
+st.markdown("""
+<div class="card">
+    <p><b>Current Logic: Adaptive Mode Active</b><br>
+    This card will now flip colors automatically based on your phone or computer settings.</p>
+</div>
+""", unsafe_allow_html=True)
