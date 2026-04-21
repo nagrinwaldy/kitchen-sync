@@ -1,73 +1,100 @@
 import streamlit as st
 
-# Page Branding
-st.set_page_config(page_title="KitchenSync | Sheboygan", page_icon="🍳", layout="wide")
+# Set page config
+st.set_page_config(page_title="KitchenSync", page_icon="🍳", layout="wide")
 
-# --- DYNAMIC ADAPTIVE CSS ---
-st.markdown("""
+# --- SIDEBAR CONTROLS ---
+with st.sidebar:
+    st.markdown("## ⚙️ App Settings")
+    persona = st.radio("Style Profile", ["The Hearth (Wellness)", "The Blueprint (Efficiency)"])
+    st.write("---")
+    st.markdown("### ❤️ Sheboygan Impact")
+    st.metric("Donated to Food Bank", "$1,240")
+
+# --- DYNAMIC THEMING LOGIC ---
+if persona == "The Hearth (Wellness)":
+    bg_color = "#FDFBF7"    # Warm Parchment
+    text_color = "#2D5A27"  # Deep Forest Green
+    accent_color = "#4F6F52"
+    border_color = "#E0D7C6"
+else:
+    bg_color = "#121212"    # Slate Black
+    text_color = "#E0E0E0"  # Crisp White/Silver
+    accent_color = "#81C784" # Mint Green
+    border_color = "#333333"
+
+# --- AGGRESSIVE CSS INJECTION ---
+st.markdown(f"""
     <style>
-    /* Default (Light Mode) Variables */
-    :root {
-        --bg-color: #FDFBF7;
-        --card-bg: #FFFFFF;
-        --text-main: #2D5A27;
-        --text-sub: #666666;
-        --border-color: #EAEAEA;
-    }
-
-    /* Dark Mode Variables */
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --bg-color: #121212;
-            --card-bg: #1E1E1E;
-            --text-main: #81C784; /* A lighter green for dark backgrounds */
-            --text-sub: #BBBBBB;
-            --border-color: #333333;
-        }
-    }
-
-    .stApp { background-color: var(--bg-color); }
+    /* Force the main background */
+    .stApp {{
+        background-color: {bg_color} !important;
+    }}
     
-    .main-header { 
-        color: var(--text-main); 
-        font-size: 42px; 
-        font-weight: 800; 
-    }
-    
-    .sub-text { 
-        color: var(--text-sub); 
-        font-size: 18px; 
-    }
-
-    .card {
-        background-color: var(--card-bg);
+    /* Force all text inside our 'cards' to be legible */
+    .metric-card {{
+        background-color: {bg_color};
         padding: 20px;
         border-radius: 12px;
-        border: 1px solid var(--border-color);
-        color: var(--text-sub);
+        border: 2px solid {border_color};
+        text-align: center;
         margin-bottom: 10px;
-    }
-    
-    b { color: var(--text-main); } /* Ensures bold text stays visible */
+    }}
+
+    .main-title {{
+        color: {text_color} !important;
+        font-family: 'Helvetica Neue', sans-serif;
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 0px;
+    }}
+
+    .sub-title {{
+        color: {accent_color} !important;
+        font-size: 20px;
+        margin-bottom: 30px;
+    }}
+
+    /* Fix Streamlit's default metric labels which get washed out */
+    [data-testid="stMetricLabel"] p {{
+        color: {accent_color} !important;
+        font-weight: bold !important;
+    }}
+    [data-testid="stMetricValue"] div {{
+        color: {text_color} !important;
+    }}
     </style>
 """, unsafe_allow_html=True)
 
-# --- RE-APPLYING THE LAYOUT ---
-st.markdown('<p class="main-header">🍳 KitchenSync</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub-text">Intelligent meal planning for the Sheboygan community.</p>', unsafe_allow_html=True)
+# --- THE PAGE CONTENT ---
+st.markdown(f'<p class="main-title">🍳 KitchenSync</p>', unsafe_allow_html=True)
+st.markdown(f'<p class="sub-title">Intelligent Wellness for Sheboygan County</p>', unsafe_allow_html=True)
 
-# Side-by-side metrics
+# Metrics Row
 m1, m2, m3 = st.columns(3)
-m1.metric("Wellness Score", "94%")
-m2.metric("Savings", "$12.40")
-m3.metric("Charity Earned", "$3.10")
+with m1:
+    st.metric("Wellness Score", "94%", "↑ 2%")
+with m2:
+    st.metric("Saved This Month", "$42.10")
+with m3:
+    st.metric("Charity Earned", "$8.40")
 
 st.write("---")
 
-# Demo Card
-st.markdown("""
-<div class="card">
-    <p><b>Current Logic: Adaptive Mode Active</b><br>
-    This card will now flip colors automatically based on your phone or computer settings.</p>
-</div>
-""", unsafe_allow_html=True)
+# The "Action" Area
+left, right = st.columns([1, 1])
+
+with left:
+    st.subheader("Plan Your Meal")
+    meal = st.text_input("What are we eating?", placeholder="e.g. Grass-fed beef stir fry")
+    if st.button("Generate Wellness Cart"):
+        st.success("Optimizing for Nutrition & Local Impact...")
+
+with right:
+    st.markdown(f"""
+    <div class="metric-card">
+        <h3 style="color:{text_color};">🛒 Live Preview</h3>
+        <p style="color:{accent_color};">Your Walmart cart will be optimized for:<br>
+        <b>Nutritional Value | Best Price | Time Saved</b></p>
+    </div>
+    """, unsafe_allow_html=True)
